@@ -1,0 +1,94 @@
+//Write a program to simulate CPU Scheduling Algorithm: FCFS
+Sample Input:
+Process ID Arrival Time Service Time
+P1 0 3
+P2 2 6
+P3 4 4
+P4 6 5
+P5 8 2
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+struct Process {
+    int pid;
+    int at;
+    int bt;
+    
+    int ct;
+    int tat;
+    int wt;
+};
+
+bool compareByArrival(const Process& a, const Process& b) {
+    return a.at < b.at;
+}
+
+int main() {
+    vector<Process> processes = {
+        {1, 0, 3},
+        {2, 2, 6},
+        {3, 4, 4},
+        {4, 6, 5},
+        {5, 8, 2}
+    };
+    int n = processes.size();
+
+    sort(processes.begin(), processes.end(), compareByArrival);
+
+    int current_time = 0;
+    float total_tat = 0;
+    float total_wt = 0;
+
+    cout << "--- FCFS Scheduling ---" << endl;
+    cout << "Gantt Chart (simplified): " << endl;
+
+    for (int i = 0; i < n; i++) {
+        if (current_time < processes[i].at) {
+            cout << current_time << " [IDLE] " << processes[i].at << " | ";
+            current_time = processes[i].at;
+        }
+
+        processes[i].ct = current_time + processes[i].bt;
+
+        processes[i].tat = processes[i].ct - processes[i].at;
+
+        processes[i].wt = processes[i].tat - processes[i].bt;
+
+        current_time = processes[i].ct;
+
+        total_tat += processes[i].tat;
+        total_wt += processes[i].wt;
+
+        cout << "P" << processes[i].pid << " " << current_time << " | ";
+    }
+    cout << endl << endl;
+
+    cout << setfill(' ') << left;
+    cout << setw(5) << "PID" 
+         << setw(5) << "AT" 
+         << setw(5) << "BT" 
+         << setw(5) << "CT" 
+         << setw(5) << "TAT" 
+         << setw(5) << "WT" << endl;
+    cout << "-------------------------------" << endl;
+
+    for (int i = 0; i < n; i++) {
+        cout << setw(5) << processes[i].pid
+             << setw(5) << processes[i].at
+             << setw(5) << processes[i].bt
+             << setw(5) << processes[i].ct
+             << setw(5) << processes[i].tat
+             << setw(5) << processes[i].wt << endl;
+    }
+
+    cout << "\nAverage Turnaround Time: " << (total_tat / n) << endl;
+    cout << "Average Waiting Time: " << (total_wt / n) << endl;
+
+    return 0;
+}  
+  
