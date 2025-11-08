@@ -1,0 +1,44 @@
+//Write a program to simulate Memory placement strategy – next fit
+Sample Input
+memory partitions of 100K, 500K, 200K, 300K and 600K (in order)
+Place processes of size 212K, 417K, 112K, 426K (in order)
+
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main() {
+    vector<int> partitions = {100, 500, 200, 300, 600};
+    vector<int> processes = {212, 417, 112, 426};
+    int n_partitions = partitions.size();
+    
+    int last_index = 0;
+
+    cout << "--- Next Fit Memory Allocation ---" << endl;
+
+    for (int i = 0; i < processes.size(); i++) {
+        int process_size = processes[i];
+        bool allocated = false;
+
+        for (int j = 0; j < n_partitions; j++) {
+            int current_index = (last_index + j) % n_partitions;
+            
+            if (partitions[current_index] >= process_size) {
+                cout << "Process " << process_size << "K allocated to partition " 
+                     << partitions[current_index] << "K." << endl;
+                
+                partitions[current_index] -= process_size;
+                allocated = true;
+                last_index = current_index;
+                break;
+            }
+        }
+
+        if (!allocated) {
+            cout << "Process " << process_size << "K cannot be allocated." << endl;
+        }
+    }
+
+    return 0;
+}
