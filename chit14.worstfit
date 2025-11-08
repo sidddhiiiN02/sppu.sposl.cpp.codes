@@ -1,0 +1,43 @@
+//Write a program to simulate Memory placement strategy – worst fit.
+Sample Input
+memory partitions of 100K, 500K, 200K, 300K and 600K (in order)
+Place processes of size 212K, 417K, 112K, 426K (in order)
+
+#include <iostream>
+#include <vector>
+#include <climits>
+
+using namespace std;
+
+int main() {
+    vector<int> partitions = {100, 500, 200, 300, 600};
+    vector<int> processes = {212, 417, 112, 426};
+
+    cout << "--- Worst Fit Memory Allocation ---" << endl;
+
+    for (int i = 0; i < processes.size(); i++) {
+        int process_size = processes[i];
+        int worst_fit_index = -1;
+        int max_fragment = INT_MIN;
+
+        for (int j = 0; j < partitions.size(); j++) {
+            if (partitions[j] >= process_size) {
+                int fragment = partitions[j] - process_size;
+                if (fragment > max_fragment) {
+                    max_fragment = fragment;
+                    worst_fit_index = j;
+                }
+            }
+        }
+
+        if (worst_fit_index != -1) {
+            cout << "Process " << process_size << "K allocated to partition " 
+                 << partitions[worst_fit_index] << "K." << endl;
+            partitions[worst_fit_index] -= process_size;
+        } else {
+            cout << "Process " << process_size << "K cannot be allocated." << endl;
+        }
+    }
+
+    return 0;
+}
