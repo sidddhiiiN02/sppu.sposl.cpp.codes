@@ -1,0 +1,49 @@
+//Write a program to simulate Page replacement algorithm. FIFO
+Sample Input:
+2, 3, 2, 1, 5, 2, 4, 5, 3, 2, 5, 2 and no. of frames is 3
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_set>
+
+using namespace std;
+
+int main() {
+    vector<int> page_string = {2, 3, 2, 1, 5, 2, 4, 5, 3, 2, 5, 2};
+    int num_frames = 3;
+
+    unordered_set<int> frames;
+    queue<int> fifo_queue;
+    int page_faults = 0;
+
+    cout << "--- FIFO Page Replacement ---" << endl;
+    cout << "Frames: " << num_frames << endl << endl;
+
+    for (int page : page_string) {
+        cout << "Page " << page << ": ";
+        
+        if (frames.find(page) != frames.end()) {
+            cout << "HIT." << endl;
+            continue;
+        }
+        
+        page_faults++;
+        cout << "FAULT. ";
+
+        if (frames.size() == num_frames) {
+            int victim = fifo_queue.front();
+            fifo_queue.pop();
+            frames.erase(victim);
+            cout << "Evicted " << victim << ". ";
+        }
+
+        frames.insert(page);
+        fifo_queue.push(page);
+        cout << "Loaded " << page << "." << endl;
+    }
+
+    cout << "\nTotal Page Faults: " << page_faults << endl;
+
+    return 0;
+}  
